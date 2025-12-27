@@ -67,29 +67,88 @@ const diplayPets=(pets)=>{
   </figure>
   <div class="card-body">
     <h2 class="card-title">${pet.breed}</h2>
-    <p>${pet.pet_details.slice(0 ,230)}</p>
-    <div class="card-actions justify-end">
-      <button class="btn btn-primary">Seelect</button>
+    <p>${pet.pet_details.slice(0 ,200)}</p>
+    <div class="card-actions flex gap-2 justify-between p-2 ">
+      <button onclick=" detailsLoder('${pet.petId}')" class="btn  btn-outline  btn-secondary w-3/12  ">details</button>
+      <button  class="btn   btn-outline btn-primary w-3/12 select">Select</button>
     </div>
   </div>
-</div>
-
-      
-     
+</div>     
      `
      petsSection.appendChild(div)
   });
+
+
+  const allselectBtn =document.getElementsByClassName("select");
+  
+  for(button of allselectBtn){
+    button.addEventListener("click" , (event)=>{
+      const title = event.target.parentNode.parentNode.childNodes[1].innerText;
+      // console.log(title)
+    })
+  }
  
  
 }
-
-
+ 
 const hiiden=()=>{
   document.getElementById("spaner").classList.add("hidden")
 }
 const show =()=>{
    document.getElementById("spaner").classList.remove("hidden")
 }
+
+const detailsLoder=(id)=>{
+  fetch(`https://openapi.programming-hero.com/api/peddy/pet/${id}`)
+  .then((res)=>res.json())
+  .then((data)=>{
+    displayDetails(data.petData)
+  })};
+
+  const displayDetails=(petDetails)=>{
+    console.log(petDetails)
+    document.getElementById("my_modal_1").showModal()
+    const detailsSection = document.getElementById("ditels_btn");
+     const div = document.createElement("div");
+     div.innerHTML =`
+        <div class="modal-box">
+               <div class="card bg-base-100 image-full w-full shadow-sm">
+  <figure>
+    <img
+    class="w-full object-cover"
+      src ="${petDetails.image}"
+      alt="Shoes" />
+  </figure>
+  <div class="card-body">
+    <div class="card">
+    <div class="flex justify-between">
+      <h1 class="text-xl font-semibold"> ${petDetails.breed}</h1>
+      <h2 class="text-lg font-extrabold">Name:${petDetails.pet_name}</h2>
+    </div>
+    <p class="text-sm font-medium"> ${petDetails.gender}</p>
+    <p class="text-sm font-medium">Price:<span class="  font-bold">${petDetails.price}$</span></p>
+    <p class="text-sm font-medium"> Birth: ${petDetails.date_of_birth?"" :""}</p>
+</div>
+    <p> ${petDetails.pet_details}</p>
+    
+    <div class="card-actions justify-end">
+       
+    </div>
+  </div>
+</div>
+          <div class="modal-action">
+            <form method="dialog">
+              <!-- if there is a button in form, it will close the modal -->
+                   <button class="btn btn-primary  ">Close</button>
+            </form>
+          </div>
+        </div>
+     
+     
+     `
+     detailsSection.appendChild(div)
+         
+  }
 
 
 categoryBtn()
